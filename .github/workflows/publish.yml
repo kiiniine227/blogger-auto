@@ -1,0 +1,26 @@
+name: Blogger 자동 예약
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * *"
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - name: Publish to Blogger
+        env:
+          BLOGGER_CLIENT_ID: ${{ secrets.BLOGGER_CLIENT_ID }}
+          BLOGGER_CLIENT_SECRET: ${{ secrets.BLOGGER_CLIENT_SECRET }}
+          BLOGGER_REFRESH_TOKEN: ${{ secrets.BLOGGER_REFRESH_TOKEN }}
+          BLOGGER_BLOG_ID: ${{ secrets.BLOGGER_BLOG_ID }}
+        run: python publish.py
+      - name: Save published log
+        run: |
+          git config user.name "blogger-bot"
+          git config user.email "bot@users.noreply.github.com"
+          git add posts/_published.json || true
+          git commit -m "update published log" || echo "no changes"
+          git push || echo "nothing to push"
