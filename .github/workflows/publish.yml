@@ -2,7 +2,7 @@ name: Blogger 자동 예약
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 0 * * *"
+    - cron: "37 1 * * *"   # 01:37 UTC = 한국 10:37 — 00:00 UTC 혼잡 시간 회피(실행 누락 방지)
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -17,10 +17,10 @@ jobs:
           BLOGGER_REFRESH_TOKEN: ${{ secrets.BLOGGER_REFRESH_TOKEN }}
           BLOGGER_BLOG_ID: ${{ secrets.BLOGGER_BLOG_ID }}
         run: python publish.py
-      - name: Save published log
+      - name: Save logs
         run: |
           git config user.name "blogger-bot"
           git config user.email "bot@users.noreply.github.com"
-          git add posts/_published.json || true
-          git commit -m "update published log" || echo "no changes"
+          git add posts/_published.json posts/_status.json || true
+          git commit -m "update publish logs" || echo "no changes"
           git push || echo "nothing to push"
