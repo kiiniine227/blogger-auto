@@ -1,0 +1,12 @@
+{
+ "consecutive_403": 1,
+ "last_success": null,
+ "history": [
+  {
+   "time": "2026-06-10 18:53 KST",
+   "published": 0,
+   "blocked": true,
+   "detail": "403 forbidden"
+  }
+ ]
+}
